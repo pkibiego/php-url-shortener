@@ -3,14 +3,11 @@
 declare(strict_types=1);
 
 /**
- * Front controller - all HTTP requests enter here.
+ * Front controller — all HTTP requests enter here.
+ *
+ * Global PHP functions (header, json_encode, etc.) are in the root
+ * namespace and do NOT need `use function` imports.
  */
-use function header;
-use function json_decode;
-use function json_encode;
-use function ob_end_clean;
-use function ob_start;
-use function http_response_code;
 
 require_once __DIR__ . '/../src/Store.php';
 require_once __DIR__ . '/../src/Shortener.php';
