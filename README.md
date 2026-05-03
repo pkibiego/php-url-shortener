@@ -14,7 +14,21 @@ php -S localhost:8080 public/index.php
 ### Create Short URL
 `POST /api/shorten`
 - **Request Body:** `{"url": "https://example.com"}`
+- **Optional:** `"code"` field for custom short codes (3–32 alphanumeric chars)
 - **Response:** `201 Created` with the short code.
+- **Errors:** `422` (invalid URL/code), `409` (custom code already taken)
+
+```bash
+# Auto-generated short code
+curl -X POST http://localhost:8080/api/shorten \
+     -H "Content-Type: application/json" \
+     -d '{"url": "https://www.google.com"}'
+
+# Custom short code
+curl -X POST http://localhost:8080/api/shorten \
+     -H "Content-Type: application/json" \
+     -d '{"url": "https://www.google.com", "code": "mygoog"}'
+```
 
 ### Redirect
 `GET /{code}`
