@@ -89,4 +89,43 @@ class Shortener
         }
         throw new RuntimeException('Unable to generate a unique short code after ' . $maxAttempts . ' attempts');
     }
+
+    /**
+     * Validate a custom short code.
+     *
+     * Rules:
+     * - Alphanumeric only (a-z, A-Z, 0-9)
+     * - 3 to 32 characters
+     * - Must not conflict with reserved API route words
+     *
+     * @param string $code The custom code to validate.
+     * @return string|null Trimmed code if valid, null otherwise.
+     */
+    public static function validateCustomCode(string $code): ?string
+    {
+        $code = trim($code);
+
+        if ($code === '') {
+            return null;
+        }
+
+        // Reserved route segments that would shadow API endpoints
+        $reserved = ['api', 'shorten', 'stats', 'index', 'favicon.ico', 'robots.txt'];
+        if (in_array(strtolower($code), $reserved, true)) {
+            return null;
+        }
+
+        // Length check
+        $len = strlen($code);
+        if ($len < 3 || $len > 32) {
+            return null;
+        }
+
+        // Alphanumeric only
+        if (!preg_match('/^[a-zA-Z0-9]+$/', $code)) {
+            return null;
+        }
+
+        return $code;
+    }
 }

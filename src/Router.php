@@ -70,8 +70,8 @@ class Router
             if (preg_match('/^\{(.+)\}$/', $part, $match)) {
                 $paramName = $match[1];
                 if ($paramName === 'code') {
-                    // Code must be exactly 8 hex characters
-                    if (!preg_match('/^[a-f0-9]{8}$/', $pathParts[$i])) {
+                    // Code must be at least 3 alphanumeric characters
+                    if (!preg_match('/^[a-zA-Z0-9]{3,32}$/', $pathParts[$i])) {
                         return null;
                     }
                     $params['code'] = $pathParts[$i];

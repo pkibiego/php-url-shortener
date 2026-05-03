@@ -82,10 +82,25 @@ function handleShorten(Store $store): void
         return;
     }
 
-    // Generate short code
-    $code = Shortener::generateCode();
-    while ($store->exists($code)) {
-        $code = Shortener::generateCode();
+    // Use custom code if provided, otherwise generate random
+    $code = null;
+    if (isset($data['code'])) {
+        $code = Shortener::validateCustomCode($data['code']);
+        if ($code === null) {
+            http_response_code(422);
+            echo json_encode(['error' => 'Invalid custom code']);
+            return;
+        }
+        if ($store->exists($code)) {
+            http_response_code(409);
+            echo json_encode(['error' => 'Custom code already in use']);
+            return;
+        }
+    }
+
+    if ($code === null) {
+        // Generate unique random code
+        $code = Shortener::generateUniqueCode($store);
     }
 
     // Store link
